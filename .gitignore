@@ -1,0 +1,23 @@
+# Backend (Django)
+
+backend/astrovenv/
+backend/.env
+backend/__pycache__/
+backend/**/*.py[cod]
+
+
+# Frontend (React/Vite)
+
+frontend/node_modules/
+frontend/dist/
+
+
+# VS Code
+
+.vscode/
+
+
+# OS Files
+
+.DS_Store
+Thumbs.db
