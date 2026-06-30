@@ -1,17 +1,15 @@
 from pathlib import Path
 from decouple import config
-
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
 
 
 SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -24,8 +22,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    "rest_framework_simplejwt",
     "rest_framework",
     "corsheaders",
+    "rest_framework_simplejwt.token_blacklist",
 
     "accounts",
     "matching",
@@ -51,6 +51,18 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+}
+
+SIMPLE_JWT = {
+
+    "ACCESS_TOKEN_LIFETIME": timedelta(
+        minutes=config("ACCESS_TOKEN_MINUTES", cast=int)
+    ),
+
+    "REFRESH_TOKEN_LIFETIME": timedelta(
+        days=config("REFRESH_TOKEN_DAYS", cast=int)
+    ),
+
 }
 
 ROOT_URLCONF = 'config.urls'
@@ -116,7 +128,5 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
