@@ -48,6 +48,7 @@ class LoginView(APIView):
 
                 response = Response(
                     {
+                        "username": user.username,
                         "message": "Login successful.",
                         "access": str(access),
                     },

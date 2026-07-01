@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../services/api";
+import api from "../../services/Api";
 import "./Auth.css";
 
 const Register = () => {
@@ -14,6 +14,7 @@ const Register = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,13 +23,32 @@ const Register = () => {
       ...prevState,
       [name]: value,
     }));
+    if (message) setMessage(null);
   };
+
+// Password validation helper
+const validatePassword = (pwd) => {
+  const errors = [];
+  if (pwd.length < 6) errors.push("minimum 6 characters");
+  if (!/[A-Z]/.test(pwd)) errors.push("one uppercase letter");
+  if (!/[a-z]/.test(pwd)) errors.push("one lowercase letter");
+  if (!/[0-9]/.test(pwd)) errors.push("one digit");
+  if (!/[!@#$%^&*(),.?\":{}|<>]/.test(pwd)) errors.push("one special character");
+  return errors;
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match.");
+      setMessage({ type: 'error', text: "Passwords do not match." });
+      return;
+    }
+
+    // Validate password requirements
+    const pwdErrors = validatePassword(formData.password);
+    if (pwdErrors.length) {
+      setMessage({ type: 'error', text: `Password must contain ${pwdErrors.join(', ')}` });
       return;
     }
 
@@ -42,26 +62,28 @@ const Register = () => {
         confirm_password: formData.confirmPassword,
       });
 
-      alert(response.data.message);
+      setMessage({ type: 'success', text: response.data.message || 'Account created successfully!' });
 
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (error) {
       if (error.response) {
         const errors = error.response.data;
 
         if (errors.username) {
-          alert(errors.username);
+          setMessage({ type: 'error', text: errors.username });
         } else if (errors.email) {
-          alert(errors.email);
+          setMessage({ type: 'error', text: errors.email });
         } else if (errors.confirm_password) {
-          alert(errors.confirm_password);
+          setMessage({ type: 'error', text: errors.confirm_password });
         } else if (errors.error) {
-          alert(errors.error);
+          setMessage({ type: 'error', text: errors.error });
         } else {
-          alert("Registration failed.");
+          setMessage({ type: 'error', text: "Registration failed." });
         }
       } else {
-        alert("Server is not responding.");
+        setMessage({ type: 'error', text: "Server is not responding." });
       }
     } finally {
       setLoading(false);
@@ -72,6 +94,12 @@ const Register = () => {
     <div className="auth-container">
       <div className="auth-card">
         <h2 className="auth-title">Create Account</h2>
+
+        {message && (
+          <div className={`form-message ${message.type}`}>
+            {message.text}
+          </div>
+        )}
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">
