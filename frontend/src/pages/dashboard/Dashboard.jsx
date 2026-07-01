@@ -9,7 +9,7 @@ const Dashboard = () => {
     const dropdownRef = useRef(null);
 
     useEffect(() => {
-        // Mock fetching user info. In a real app, you would parse the JWT or call an API.
+        
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             try {
@@ -34,10 +34,10 @@ const Dashboard = () => {
     }, []);
 
     const handleLogout = () => {
-        // Clear JWT tokens and user data
+     
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        // Redirect to login page
+     
         navigate('/login');
     };
 
