@@ -1,12 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
+import { logout } from "../../store/authSlice";
+import { useDispatch } from "react-redux";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -32,12 +35,20 @@ const Dashboard = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  const handleLogout = async () => {
+  try {
+    await api.post("/logout/");
+  } catch (error) {
+    console.log(error);
+  }
 
-    navigate("/login");
-  };
+  sessionStorage.removeItem("access");
+  localStorage.removeItem("user");
+
+  dispatch(logout());
+
+  navigate("/login", { replace: true });
+};
 
   const handleNavigate = (path) => {
     navigate(path);

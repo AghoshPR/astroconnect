@@ -34,8 +34,6 @@ const HistoryDetails = () => {
     return <h2>No Match Found</h2>;
   }
 
-
-
   const scores = [
     { name: "Varna", score: result.varna, outOf: 1 },
     { name: "Vashya", score: result.vashya, outOf: 2 },
@@ -46,8 +44,6 @@ const HistoryDetails = () => {
     { name: "Bhakoot", score: result.bhakoot, outOf: 7 },
     { name: "Nadi", score: result.nadi, outOf: 8 },
   ];
-
-
 
   return (
     <div className="match-result-container">
@@ -65,7 +61,7 @@ const HistoryDetails = () => {
         </div>
 
         <div className="scores-grid">
-           {scores.map((item) => (
+          {scores.map((item) => (
             <div key={item.name} className="score-item">
               <span className="score-name">{item.name}</span>
 

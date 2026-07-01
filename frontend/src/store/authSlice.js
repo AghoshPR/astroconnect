@@ -1,12 +1,37 @@
 import {createSlice} from "@reduxjs/toolkit"
 
+
+
+const loadAuthState = ()=>{
+    try{
+        const data = localStorage.getItem("auth")
+        return data ? JSON.parse(data):null
+    }catch{
+        return null
+    }
+}
+
+const saveAuthState = (state)=>{
+    localStorage.setItem(
+        "auth",
+        JSON.stringify({
+            isAuthenticated:state.isAuthenticated,
+        })
+    )
+
+}
+
+const persistedAuth = loadAuthState()
+
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: persistedAuth?.isAuthenticated || false,
   loading: false,
   error: null,
 };
 
+
 const authSlice = createSlice({
+
   name: "auth",
 
   initialState,
@@ -21,6 +46,8 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.error = null;
+
+      saveAuthState(state);
     },
 
     loginFailure: (state, action) => {
@@ -33,6 +60,8 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.loading = false;
       state.error = null;
+
+      localStorage.removeItem("auth")
     },
   },
 });

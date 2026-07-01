@@ -41,6 +41,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (err) {
         sessionStorage.removeItem("access");
+        localStorage.removeItem("auth");
 
         window.location.href = "/login";
 
