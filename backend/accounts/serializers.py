@@ -49,18 +49,28 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
 
-    username = serializers.CharField()
+    email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
     def validate(self,attrs):
 
-        username = attrs.get("username")
+        email = attrs.get("email")
         password = attrs.get("password")
 
+        try:
+
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({
+                "email":"Invalid email or password"
+            })
+
         user = authenticate(
-            username=username,
+            username=user.username,
             password=password
         )
+
+
 
         if not user:
             raise serializers.ValidationError({
