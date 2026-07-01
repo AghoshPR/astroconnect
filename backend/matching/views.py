@@ -4,7 +4,7 @@ from rest_framework import status
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
 from .services import calculate_match
-from .models import MatchHistory
+from .models import *
 from django.shortcuts import get_object_or_404
 
 
@@ -65,3 +65,29 @@ class MatchResultView(APIView):
             "total_score": match.total_score,
             "verdict": match.verdict,
         })
+
+
+class HistoryListView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        matches = MatchHistory.objects.filter(
+            user=request.user
+        ).order_by("-created_at")
+
+        data = []
+
+        for match in matches:
+            data.append({
+                "match_id": match.id,
+                "person1": match.person1.name,
+                "person2": match.person2.name,
+                "total_score": match.total_score,
+                "verdict": match.verdict,
+                "created_at": match.created_at
+
+            })
+
+        return Response(data)
