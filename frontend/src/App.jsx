@@ -16,7 +16,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        
         <Route path="/" element={<Navigate to="/login" replace />} />
 
         {/* Public Routes */}
@@ -44,7 +43,7 @@ function App() {
         />
 
         <Route
-          path="/match-result"
+          path="/match-result/:id"
           element={
             <ProtectedRoute>
               <MatchResult />
