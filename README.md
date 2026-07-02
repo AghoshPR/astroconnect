@@ -240,14 +240,26 @@ Current tests include:
 
 ---
 
+# Approach
+
+The application follows a client-server architecture using React for the frontend and Django REST Framework for the backend.
+
+- JWT authentication is used to secure protected API endpoints.
+- Users can generate a compatibility match by providing the birth details of two individuals.
+- Birth details are stored in the database, and each generated result is saved as match history for the authenticated user.
+- The backend exposes REST APIs that are consumed by the React frontend.
+- The Django backend is Dockerized to simplify development and deployment.
+
 
 
 # Assumptions
 
-- Real astrological calculations are not implemented.
-- Koot scores are generated using simplified logic.
-- Maximum compatibility score is 36.
-- Verdict is determined from the total score.
+- The astrological compatibility logic is intentionally simplified for this assignment.
+- Exact Ashtakoota calculations are not implemented.
+- Individual Koot scores (Varna, Vashya, Tara, Yoni, Graha Maitri, Gana, Bhakoot, and Nadi) are generated using simplified logic to demonstrate the application workflow.
+- The maximum compatibility score is 36.
+- The compatibility verdict is determined based on the final total score.
+- The project supports both MySQL and PostgreSQL. Since it uses Django ORM, switching between the two databases only requires updating the database configuration.
 
 ---
 
